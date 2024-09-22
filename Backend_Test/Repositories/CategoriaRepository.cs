@@ -38,7 +38,6 @@ namespace Backend_Test.Repositories
             }
             return lista;
         }
-
         public async Task<bool> Crear(Categoria categoria)
         {
             using (var con = new SqlConnection(_conexion))
@@ -52,7 +51,6 @@ namespace Backend_Test.Repositories
                 }
             }
         }
-
         public async Task<bool> Editar(Categoria categoria)
         {
             using (var con = new SqlConnection(_conexion))
@@ -67,7 +65,6 @@ namespace Backend_Test.Repositories
                 }
             }
         }
-
         public async Task<bool> Eliminar(int id)
         {
             using (var con = new SqlConnection(_conexion))
@@ -81,7 +78,6 @@ namespace Backend_Test.Repositories
                 }
             }
         }
-
     }
 
 }

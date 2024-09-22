@@ -14,7 +14,6 @@ namespace Backend_Test.Repositories
         {
             _conexion = configuration.GetConnectionString("ConexionSQL")!;
         }
-
         public async Task<List<PostDTO>> Lista()
         {
             var lista = new List<PostDTO>();
@@ -42,7 +41,6 @@ namespace Backend_Test.Repositories
             }
             return lista;
         }
-
         public async Task<bool> Crear(PostDTO post)
         {
             using (var con = new SqlConnection(_conexion))
@@ -57,7 +55,6 @@ namespace Backend_Test.Repositories
                 }
             }
         }
-
         public async Task<bool> Editar(PostDTO post)
         {
             using (var con = new SqlConnection(_conexion))
@@ -73,7 +70,6 @@ namespace Backend_Test.Repositories
                 }
             }
         }
-
         public async Task<bool> Eliminar(int id)
         {
             using (var con = new SqlConnection(_conexion))
@@ -87,7 +83,6 @@ namespace Backend_Test.Repositories
                 }
             }
         }
-
         public async Task<PostDetallesDTO> Detalles(int id)
         {
             PostDetallesDTO post = null;
@@ -145,7 +140,6 @@ namespace Backend_Test.Repositories
             }
             return post;
         }
-
         public async Task<bool> AñadirCategorias(int postId, string categorias)
         {
             using (var con = new SqlConnection(_conexion))
