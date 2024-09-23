@@ -1,6 +1,9 @@
-@Backend_Test_HostAddress = http://localhost:5228
+@Backend_Test_HostAddress = http://localhost:5228/api
 
-GET {{Backend_Test_HostAddress}}/weatherforecast/
+GET {{Backend_Test_HostAddress}}/Post/1
 Accept: application/json
 
 ###
+
+GET {{Backend_Test_HostAddress}}/Categoria/
+Accept: application/json
