@@ -145,7 +145,7 @@ Para garantizar que todos los desarrolladores trabajen con la misma estructura d
 - POST `/api/category` - Crea una nueva categoría
 - PUT `/api/category/{id}` - Actualiza una categoría
 - DELETE `/api/category/{id}` - Elimina un categoría
-- 
+
 ### Comentarios
 - POST `/api/comment` - Añade un comentario a un post
 - PUT `/api/comment` - elimina un comentario de post
