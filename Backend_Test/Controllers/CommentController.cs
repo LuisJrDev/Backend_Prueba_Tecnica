@@ -70,7 +70,7 @@ namespace Backend_Test.Controllers
                 var resultado = await _commentRepository.Eliminar(id);
                 if (resultado)
                 {
-                    return NoContent(); // 204
+                    return NoContent();
                 }
                 return NotFound($"Comment con ID {id} no encontrado o no se pudo eliminar");
             }

@@ -7,15 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Controllers\ComentarioController - Copia.cs" />
-    <Compile Remove="Controllers\PostController - Copia.cs" />
-    <Compile Remove="Controllers\ValuesController.cs" />
-    <Compile Remove="Controllers\WeatherForecastController.cs" />
-    <Compile Remove="Models\HomeController.cs" />
-    <Compile Remove="Models\Post.cs" />
-    <Compile Remove="Models\PostCategoriasDTO.cs" />
-    <Compile Remove="Models\PostDetalles.cs" />
-    <Compile Remove="WeatherForecast.cs" />
   </ItemGroup>
 
   <ItemGroup>
