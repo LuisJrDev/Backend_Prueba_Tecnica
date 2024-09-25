@@ -1,6 +1,7 @@
 ﻿using Backend_Test.Models;
 using Backend_Test.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace Backend_Test.Controllers
 {
@@ -16,18 +17,23 @@ namespace Backend_Test.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Listar()
+        public async Task<IActionResult> ListarPosts(int page = 1, int pageSize = 10)
         {
             try
             {
-                var lista = await _postRepository.Lista();
-                return Ok(lista);
+                var (posts, totalPosts) = await _postRepository.ListarPosts(page, pageSize);
+                var response = new
+                {
+                    Posts = posts,
+                    TotalPosts = totalPosts
+                };
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error al obtener la lista de posts: {ex.Message}");
+                return StatusCode(500, $"Error al obtener los posts: {ex.Message}");
             }
-
         }
 
         [HttpPost]
@@ -53,12 +59,12 @@ namespace Backend_Test.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Editar([FromBody] PostDTO post)
+        [HttpPut("{postId}")]
+        public async Task<IActionResult> Editar(int postId, [FromBody] PostDTO post)
         {
-            if (post == null)
+            if (post == null || post.PostId != postId)
             {
-                return BadRequest("El objeto post no puede ser null");
+                return BadRequest("El objeto post no puede ser null y debe tener un ID válido.");
             }
 
             try
@@ -68,7 +74,7 @@ namespace Backend_Test.Controllers
                 {
                     return Ok(new { isSuccess = resultado });
                 }
-                return NotFound($"Post con ID {post.PostId} no encontrado o no se pudo editar");
+                return NotFound($"Post con ID {postId} no encontrado o no se pudo editar");
             }
             catch (Exception ex)
             {

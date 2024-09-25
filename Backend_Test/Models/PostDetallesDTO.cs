@@ -8,8 +8,8 @@
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
-        public List<Categoria> Categorias { get; set; } = new List<Categoria>();
-        public List<Comentario> Comentarios { get; set; } = new List<Comentario>();
+        public List<Category> Categorias { get; set; } = new List<Category>();
+        public List<Comment> Comentarios { get; set; } = new List<Comment>();
     }
 
 }

@@ -4,38 +4,49 @@ using System.Data.SqlClient;
 
 namespace Backend_Test.Repositories
 {
-    public class ComentarioRepository : IComentarioRepository
+    public class CommentRepository : ICommentRepository
     {
         private readonly string _conexion;
 
-        public ComentarioRepository(IConfiguration configuration)
+        public CommentRepository(IConfiguration configuration)
         {
             _conexion = configuration.GetConnectionString("ConexionSQL")!;
         }
 
-        public async Task<bool> Crear(Comentario comentario)
+        public async Task<Comment> Crear(Comment comment)
         {
             using (var con = new SqlConnection(_conexion))
             {
                 using (var cmd = new SqlCommand("sp_crearComment", con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@PostId", comentario.PostId);
-                    cmd.Parameters.AddWithValue("@Content", comentario.Content);
+                    cmd.Parameters.AddWithValue("@PostId", comment.PostId);
+                    cmd.Parameters.AddWithValue("@Content", comment.Content);
+
+                    var outputIdParam = new SqlParameter("@CommentId", SqlDbType.Int)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    cmd.Parameters.Add(outputIdParam);
+
                     await con.OpenAsync();
-                    return await cmd.ExecuteNonQueryAsync() > 0;
+                    await cmd.ExecuteNonQueryAsync();
+
+                    comment.CommentId = (int)outputIdParam.Value;
+                    return comment;
                 }
             }
         }
-        public async Task<bool> Editar(Comentario comentario)
+
+        public async Task<bool> Editar(Comment Comment)
         {
             using (var con = new SqlConnection(_conexion))
             {
                 using (var cmd = new SqlCommand("sp_editarComment", con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@CommentId", comentario.CommentId);
-                    cmd.Parameters.AddWithValue("@Content", comentario.Content);
+                    cmd.Parameters.AddWithValue("@CommentId", Comment.CommentId);
+                    cmd.Parameters.AddWithValue("@Content", Comment.Content);
                     await con.OpenAsync();
                     return await cmd.ExecuteNonQueryAsync() > 0;
                 }

@@ -5,18 +5,18 @@ using System.Runtime.CompilerServices;
 
 namespace Backend_Test.Repositories
 {
-    public class CategoriaRepository : ICategoriaRepository
+    public class CategoryRepository : ICategoryRepository
     {
         private readonly string _conexion;
 
-        public CategoriaRepository(IConfiguration configuration)
+        public CategoryRepository(IConfiguration configuration)
         {
             _conexion = configuration.GetConnectionString("ConexionSQL")!;
         }
 
-        public async Task<List<Categoria>> Lista()
+        public async Task<List<Category>> Lista()
         {
-            var lista = new List<Categoria>();
+            var lista = new List<Category>();
             using (var con = new SqlConnection(_conexion))
             {
                 await con.OpenAsync();
@@ -27,7 +27,7 @@ namespace Backend_Test.Repositories
                     {
                         while (await reader.ReadAsync())
                         {
-                            lista.Add(new Categoria
+                            lista.Add(new Category
                             {
                                 CategoryId = Convert.ToInt32(reader["CategoryId"]),
                                 Name = reader["Name"].ToString()
@@ -38,28 +38,28 @@ namespace Backend_Test.Repositories
             }
             return lista;
         }
-        public async Task<bool> Crear(Categoria categoria)
+        public async Task<bool> Crear(Category Category)
         {
             using (var con = new SqlConnection(_conexion))
             {
                 using (var cmd = new SqlCommand("sp_crearCategory", con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@Name", categoria.Name);
+                    cmd.Parameters.AddWithValue("@Name", Category.Name);
                     await con.OpenAsync();
                     return await cmd.ExecuteNonQueryAsync() > 0;
                 }
             }
         }
-        public async Task<bool> Editar(Categoria categoria)
+        public async Task<bool> Editar(Category Category)
         {
             using (var con = new SqlConnection(_conexion))
             {
                 using (var cmd = new SqlCommand("sp_editarCategory", con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@CategoryId", categoria.CategoryId);
-                    cmd.Parameters.AddWithValue("@Name", categoria.Name);
+                    cmd.Parameters.AddWithValue("@CategoryId", Category.CategoryId);
+                    cmd.Parameters.AddWithValue("@Name", Category.Name);
                     await con.OpenAsync();
                     return await cmd.ExecuteNonQueryAsync() > 0;
                 }

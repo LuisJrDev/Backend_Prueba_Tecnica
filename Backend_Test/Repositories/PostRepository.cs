@@ -14,32 +14,41 @@ namespace Backend_Test.Repositories
         {
             _conexion = configuration.GetConnectionString("ConexionSQL")!;
         }
-        public async Task<List<PostDTO>> Lista()
+        public async Task<(IEnumerable<PostDTO> posts, int totalPosts)> ListarPosts(int page, int pageSize)
         {
-            var lista = new List<PostDTO>();
             using (var con = new SqlConnection(_conexion))
             {
-                await con.OpenAsync();
                 using (var cmd = new SqlCommand("sp_listaPosts", con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Page", page);
+                    cmd.Parameters.AddWithValue("@PageSize", pageSize);
+
+                    var posts = new List<PostDTO>();
+                    int totalPosts = 0;
+
+                    await con.OpenAsync();
                     using (var reader = await cmd.ExecuteReaderAsync())
                     {
                         while (await reader.ReadAsync())
                         {
-                            lista.Add(new PostDTO
+                            posts.Add(new PostDTO
                             {
-                                PostId = Convert.ToInt32(reader["PostId"]),
+                                PostId = (int)reader["PostId"],
                                 Title = reader["Title"].ToString(),
                                 Content = reader["Content"].ToString(),
-                                CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
-                                UpdatedAt = Convert.ToDateTime(reader["UpdatedAt"])
+                                CreatedAt = (DateTime)reader["CreatedAt"]
                             });
                         }
+
+                        if (await reader.NextResultAsync() && await reader.ReadAsync()) 
+                        {
+                            totalPosts = (int)reader["totalPosts"];
+                        }
                     }
+                    return (posts, totalPosts);
                 }
             }
-            return lista;
         }
         public async Task<bool> Crear(PostDTO post)
         {
@@ -77,7 +86,7 @@ namespace Backend_Test.Repositories
                 using (var cmd = new SqlCommand("sp_eliminarPosts", con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@IdPost", id);
+                    cmd.Parameters.AddWithValue("@PostId", id);
                     await con.OpenAsync();
                     return await cmd.ExecuteNonQueryAsync() > 0;
                 }
@@ -105,8 +114,8 @@ namespace Backend_Test.Repositories
                                 Content = reader["Content"].ToString(),
                                 CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
                                 UpdatedAt = Convert.ToDateTime(reader["UpdatedAt"]),
-                                Categorias = new List<Categoria>(),
-                                Comentarios = new List<Comentario>()
+                                Categorias = new List<Category>(),
+                                Comentarios = new List<Comment>()
                             };
                         }
 
@@ -114,7 +123,7 @@ namespace Backend_Test.Repositories
                         {
                             while (await reader.ReadAsync())
                             {
-                                post.Categorias.Add(new Categoria
+                                post.Categorias.Add(new Category
                                 {
                                     CategoryId = Convert.ToInt32(reader["CategoryId"]),
                                     Name = reader["Name"].ToString()
@@ -126,7 +135,7 @@ namespace Backend_Test.Repositories
                         {
                             while (await reader.ReadAsync())
                             {
-                                post.Comentarios.Add(new Comentario
+                                post.Comentarios.Add(new Comment
                                 {
                                     CommentId = Convert.ToInt32(reader["CommentId"]),
                                     PostId = Convert.ToInt32(reader["PostId"]),

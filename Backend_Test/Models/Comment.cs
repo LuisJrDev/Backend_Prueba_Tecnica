@@ -2,7 +2,7 @@
 
 namespace Backend_Test.Models
 {
-    public class Comentario
+    public class Comment
     {
         public int CommentId { get; set; }
 
