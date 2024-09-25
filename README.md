@@ -113,7 +113,19 @@ Para garantizar que todos los desarrolladores trabajen con la misma estructura d
    ```sql
    CREATE DATABASE PostComments;
    GO
+   
+5. Carga el archivo `db_structure.sql` en tu editor de SQL y ejecútalo. Este archivo generará las tablas necesarias para los posts, comentarios y categorías, junto con sus relaciones y restricciones.
 
+### Archivo de estructura
+   El archivo db_structure.sql contiene la siguiente estructura básica:
+   
+   - **Posts**
+   - **Comentarios**
+   - **Categorías**
+   - Relaciones entre las tablas y las claves foráneas.
+     
+   > **Nota:** Asegúrate de que las credenciales y configuraciones en el archivo `appsettings.json` coincidan con la configuración de la base de datos que acabas de crear.
+        
 ## Estructura del proyecto
 
       |-- Controllers
